@@ -9,17 +9,32 @@ def num_if_can(x):
 	except ValueError:
 		return x
 
-fileName = input('File name: ')
-with open(fileName) as file:
-	lines = file.read().split('\n')
+def parseFile(fileName, name, maxTimestamp = 1_000_000):
+	with open(fileName) as file:
+		lines = file.read().split('\n')
 
-fields = lines[0].split(';')
-splitLines = [x.split(';') for x in lines[1:]]
-processedLines = [[num_if_can(x) for x in line] for line in splitLines]
-data = [{fields[i]: line[i] for i in range(len(line))} for line in processedLines if len(line) == len(fields)]
+	fields = lines[0].split(';')
+	splitLines = [x.split(';') for x in lines[1:]]
+	processedLines = [[num_if_can(x) for x in line] for line in splitLines]
+	data = [{fields[i]: line[i] for i in range(len(line))} for line in processedLines if len(line) == len(fields)]
 
-productNames = list(set([x['product'] for x in data])) # ['TOMATOES', 'EMERALDS']
-data = {productName: [x for x in data if x['product'] == productName] for productName in productNames}
+	productNames = list(set([x[name] for x in data])) # ['TOMATOES', 'EMERALDS']
+	return {productName: [x for x in data if x[name] == productName and x['timestamp'] < maxTimestamp] for productName in productNames}
+	
+
+day = input('Enter day ([-1]/-2): ')
+if not day:
+	day = -1
+maxTimestamp = input('Enter max timestamp ([1000000]): ')
+if not maxTimestamp:
+	maxTimestamp = 1_000_000
+maxTimestamp = int(maxTimestamp)
+pricesFileName = f'prices_round_0_day_{day}.csv'
+pricesData = parseFile(pricesFileName, 'product', maxTimestamp)
+
+tradesFileName = f'trades_round_0_day_{day}.csv'
+tradesData = parseFile(tradesFileName, 'symbol', maxTimestamp)
+
 
 
 import matplotlib.pyplot as plt
@@ -35,16 +50,22 @@ elif userSymbol == 'T':
 elif userSymbol:
 	symbol = userSymbol
 
-times = [x['timestamp'] for x in data[symbol]]
-bidPrices1 = [x['bid_price_1'] for x in data[symbol]]
-bidPrices2 = [x['bid_price_2'] for x in data[symbol]]
-askPrices1 = [x['ask_price_1'] for x in data[symbol]]
-askPrices2 = [x['ask_price_2'] for x in data[symbol]]
+pricesTimes = [x['timestamp'] for x in pricesData[symbol]]
+bidPrices1 = [x['bid_price_1'] for x in pricesData[symbol]]
+bidPrices2 = [x['bid_price_2'] for x in pricesData[symbol]]
+askPrices1 = [x['ask_price_1'] for x in pricesData[symbol]]
+askPrices2 = [x['ask_price_2'] for x in pricesData[symbol]]
 
-plt.plot(times, bidPrices1, 'r', label = 'Bid Prices 1', linewidth = 0.25)
-# plt.plot(times, bidPrices2, 'tab:orange', label = 'Bid Prices 2', linewidth = 0.25, antialiased = False)
-plt.plot(times, askPrices1, 'g', label = 'Ask Prices 1', linewidth = 0.25)
-# plt.plot(times, askPrices2, 'c', label = 'Ask Prices 2', linewidth = 0.25, antialiased = False)
+plt.plot(pricesTimes, bidPrices1, 'r', label = 'Bid Prices 1', linewidth = 0.5)
+# plt.plot(pricesTimes, bidPrices2, 'tab:orange', label = 'Bid Prices 2', linewidth = 0.25, antialiased = False)
+plt.plot(pricesTimes, askPrices1, 'g', label = 'Ask Prices 1', linewidth = 0.5)
+# plt.plot(pricesTimes, askPrices2, 'c', label = 'Ask Prices 2', linewidth = 0.25, antialiased = False)
+
+tradesTimes = [x['timestamp'] for x in tradesData[symbol]]
+tradesPrices = [x['price'] for x in tradesData[symbol]]
+
+plt.plot(tradesTimes, tradesPrices, 'co', label = 'Trade Prices', ms = 2)
+
 
 plt.xlabel("times")
 plt.ylabel("prices")
