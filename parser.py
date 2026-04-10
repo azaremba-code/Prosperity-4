@@ -25,10 +25,14 @@ def parseFile(fileName, name, maxTimestamp = 1_000_000):
 day = input('Enter day ([-1]/-2): ')
 if not day:
 	day = -1
-maxTimestamp = input('Enter max timestamp ([1000000]): ')
-if not maxTimestamp:
-	maxTimestamp = 1_000_000
-maxTimestamp = int(maxTimestamp)
+
+tickCount = input('Enter tick count ([1000]): ')
+if not tickCount:
+	tickCount = 1_000
+tickCount = int(tickCount)
+
+tickLength = 1_000
+maxTimestamp = tickLength * tickCount
 pricesFileName = f'prices_round_0_day_{day}.csv'
 pricesData = parseFile(pricesFileName, 'product', maxTimestamp)
 
