@@ -24,7 +24,7 @@ def parseFile(fileName, name, maxTimestamp = 1_000_000):
 
 day = input('Enter day ([-1]/-2): ')
 if not day:
-	day = -1
+	day = '-1'
 
 tickCount = input('Enter tick count ([1000]): ')
 if not tickCount:
