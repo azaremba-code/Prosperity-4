@@ -26,7 +26,7 @@ day = input('Enter day ([-1]/-2): ')
 if not day:
 	day = '-1'
 
-tickCount = input('Enter tick count ([1000]): ')
+tickCount = input('Enter tick count (1-[1000]): ')
 if not tickCount:
 	tickCount = 1_000
 tickCount = int(tickCount)
