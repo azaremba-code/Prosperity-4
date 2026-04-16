@@ -7,7 +7,11 @@ def num_if_can(x):
 	try:
 		return float(x)
 	except ValueError:
-		return x
+		pass
+	
+	if not x:
+		return None
+	return x
 
 def parseFile(fileName, name, maxTimestamp = 1_000_000):
 	with open(fileName) as file:
@@ -22,43 +26,48 @@ def parseFile(fileName, name, maxTimestamp = 1_000_000):
 	return {productName: [x for x in data if x[name] == productName and x['timestamp'] < maxTimestamp] for productName in productNames}
 	
 
-day = input('Enter day ([-1]/-2): ')
-if not day:
-	day = '-1'
+curr_round = input('Enter round (0/[1]/2)')
+if not curr_round:
+	curr_round = '1'
 
-tickCount = input('Enter tick count (1-[1000]): ')
+day = input('Enter day ([0]/-1/-2): ')
+if not day:
+	day = '0'
+
+tickCount = input('Enter tick count (1-[10000]): ')
 if not tickCount:
-	tickCount = 1_000
+	tickCount = 10_000
 tickCount = int(tickCount)
 
-tickLength = 1_000
+tickLength = 1_00
 maxTimestamp = tickLength * tickCount
-pricesFileName = f'prices_round_0_day_{day}.csv'
+pricesFileName = f'data/prices_round_{curr_round}_day_{day}.csv'
 pricesData = parseFile(pricesFileName, 'product', maxTimestamp)
 
-tradesFileName = f'trades_round_0_day_{day}.csv'
+tradesFileName = f'data/trades_round_{curr_round}_day_{day}.csv'
 tradesData = parseFile(tradesFileName, 'symbol', maxTimestamp)
-
 
 
 import matplotlib.pyplot as plt
 
-symbol = 'TOMATOES'
+symbol = 'INTARIAN_PEPPER_ROOT'
 # symbol = 'EMERALDS'
 
-userSymbol = input('Product Name ([TOMATOES]/EMERALDS): ').upper()
+userSymbol = input('Product Name ((T)OMATOES/(E)MERALDS/[(I)NTARIAN_PEPPER_ROOT]/(A)SH_COATED_OSMIUM): ').upper()
 if userSymbol == 'E':
 	symbol = 'EMERALDS'
 elif userSymbol == 'T':
 	symbol = 'TOMATOES'
+elif userSymbol == 'I':
+	symbol = 'INTARIAN_PEPPER_ROOT'
+elif userSymbol == 'A':
+	symbol = 'ASH_COATED_OSMIUM'
 elif userSymbol:
 	symbol = userSymbol
 
 pricesTimes = [x['timestamp'] for x in pricesData[symbol]]
 bidPrices1 = [x['bid_price_1'] for x in pricesData[symbol]]
-bidPrices2 = [x['bid_price_2'] for x in pricesData[symbol]]
 askPrices1 = [x['ask_price_1'] for x in pricesData[symbol]]
-askPrices2 = [x['ask_price_2'] for x in pricesData[symbol]]
 
 plt.plot(pricesTimes, bidPrices1, 'r', label = 'Bid Prices 1', linewidth = 0.5)
 # plt.plot(pricesTimes, bidPrices2, 'tab:orange', label = 'Bid Prices 2', linewidth = 0.25, antialiased = False)
