@@ -18,5 +18,5 @@ conda install numpy
 To the run the historical data visualizer:
 
 ```
-python3 parser.py
+python3 visualizer.py
 ```

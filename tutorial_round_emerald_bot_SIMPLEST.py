@@ -8,7 +8,7 @@ class Trader:
         product = "EMERALDS"
         BUY_PRICE = 9993
         SELL_PRICE = 10007
-        LIMIT = 40
+        LIMIT = 80
 
         orders: List[Order] = []
 
