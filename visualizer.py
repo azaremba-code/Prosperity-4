@@ -70,8 +70,9 @@ import matplotlib.pyplot as plt
 
 plt.style.use('dark_background')
 
+print('[Case-insensitive. First letter of product is sufficient. For Velvetfruit Vouchers (i.e. VEV_5400), v followed by first 2 digits is sufficient (i.e. v54).]')
 validProducts = sorted(pricesData.keys())
-symbol = getValueFromList('Product Name', validProducts, validProducts[0])
+symbol = getValueFromList('Product Name', validProducts, validProducts[0]).upper()
 if symbol == 'E':
 	symbol = 'EMERALDS'
 elif symbol == 'T':
@@ -84,12 +85,33 @@ elif symbol == 'H':
 	symbol = 'HYDROGEL_PACK'
 elif symbol == 'V':
 	symbol = 'VELVETFRUIT_EXTRACT'
+elif symbol == 'V40':
+	symbol = 'VEV_4000'
+elif symbol == 'V45':
+	symbol = 'VEV_4500'
+elif symbol == 'V50':
+	symbol = 'VEV_5000'
+elif symbol == 'V51':
+	symbol = 'VEV_5100'
+elif symbol == 'V52':
+	symbol = 'VEV_5200'
+elif symbol == 'V53':
+	symbol = 'VEV_5300'
+elif symbol == 'V54':
+	symbol = 'VEV_5400'
+elif symbol == 'V55':
+	symbol = 'VEV_5500'
+elif symbol == 'V60':
+	symbol = 'VEV_6000'
+elif symbol == 'V65':
+	symbol = 'VEV_6500'
+
 
 pricesTimes = [x['timestamp'] for x in pricesData[symbol]]
 bidPrices1 = [x['bid_price_1'] for x in pricesData[symbol]]
 askPrices1 = [x['ask_price_1'] for x in pricesData[symbol]]
 
-if True and symbol == 'INTARIAN_PEPPER_ROOT':
+if True and symbol == 'INTARIAN_PEPPER_ROOT':  # this block was written by chatgpt. disable by changing True to False
 	# ----------------------------------------------------------
 	import numpy as np
 
