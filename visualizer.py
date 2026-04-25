@@ -16,7 +16,6 @@ def num_if_can(x):
 def parseFile(fileName, name, maxTimestamp = 1_000_000) -> dict[str, list[dict]]:
 	with open(fileName) as file:
 		lines = file.read().split('\n')
-
 	fields = lines[0].split(';')
 	splitLines = [x.split(';') for x in lines[1:]]
 	processedLines = [[num_if_can(x) for x in line] for line in splitLines]
@@ -165,8 +164,12 @@ if True and symbol == 'INTARIAN_PEPPER_ROOT':  # this block was written by chatg
 plt.plot(pricesTimes, bidPrices1, 'r', label = 'Bid Prices 1', linewidth = 0.5)
 plt.plot(pricesTimes, askPrices1, 'g', label = 'Ask Prices 1', linewidth = 0.5)
 
-tradesTimes = [x['timestamp'] for x in tradesData[symbol]]
-tradesPrices = [x['price'] for x in tradesData[symbol]]
+try:
+	tradesTimes = [x['timestamp'] for x in tradesData[symbol]]
+	tradesPrices = [x['price'] for x in tradesData[symbol]]
+except KeyError:
+	tradesTimes = []
+	tradesPrices = []
 
 plt.plot(tradesTimes, tradesPrices, 'co', label = 'Trade Prices', ms = 2)
 
